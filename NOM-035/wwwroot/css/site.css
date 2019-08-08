@@ -65,9 +65,7 @@ form{
   padding: 10px;
 }
 .Botones{ 
-  /*position:absolute;*/
   width:100%; left:0;
   text-align:center;
   margin:auto;
-  /*position: relative; top: 50%; transform: translateY(-50%) translateX(30%); width: 100%;*/
 }
