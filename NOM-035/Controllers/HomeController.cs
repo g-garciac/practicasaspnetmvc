@@ -25,5 +25,9 @@ namespace NOM_035.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult Saludo(){
+           return Ok("Hola");
+        } 
     }
 }
