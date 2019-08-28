@@ -14,7 +14,7 @@ namespace DemoMvc.Controllers
         public IActionResult Index()
         {
             //Ir a un servicio para obtener la lista de productos
-            var listaProductos = DbProductos.Select(p => new InfoProductoVm { Nombre = p.Nombre, Precio = p.Precio }).ToArray();
+            var listaProductos = DbProductos.Select(p => new InfoProductoVm { Id = p.Id, Nombre = p.Nombre, Precio = p.Precio }).ToArray();
             return View(listaProductos);
         }
 
@@ -42,6 +42,58 @@ namespace DemoMvc.Controllers
             {
                 return View(model);
             }
+        }
+
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            var producto = DbProductos.FirstOrDefault(p => p.Id.Equals(id));
+            return View(producto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(CapturaProductoVm model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var producto = DbProductos.FirstOrDefault(p => p.Id.Equals(model.Id));
+            if (!(producto is null))
+            {
+                DbProductos[DbProductos.IndexOf(producto)] = model;
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Details(string id)
+        {
+            var producto = DbProductos.FirstOrDefault(p => p.Id.Equals(id));
+            return View(producto);
+        }
+
+
+        [HttpGet]
+        public IActionResult Delete(string id)
+        {
+            var producto = DbProductos.FirstOrDefault(p => p.Id.Equals(id));
+            return View(producto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(string id, CapturaProductoVm model)
+        {
+            var producto = DbProductos.FirstOrDefault(p => p.Id.Equals(id));
+            if (!(producto is null))
+            {
+                DbProductos.Remove(producto);
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
         }
     }
 }
