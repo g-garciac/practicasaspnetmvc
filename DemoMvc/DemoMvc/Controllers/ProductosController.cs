@@ -9,15 +9,12 @@ namespace DemoMvc.Controllers
 {
     public class ProductosController : Controller
     {
+        private static readonly List<CapturaProductoVm> DbProductos = new List<CapturaProductoVm>();
+
         public IActionResult Index()
         {
             //Ir a un servicio para obtener la lista de productos
-            var listaProductos = new List<InfoProductoVm> {
-                new InfoProductoVm {Nombre="Coca cola",Precio =10},
-                new InfoProductoVm {Nombre="Sabritas",Precio =9},
-                new InfoProductoVm {Nombre="Frutsi",Precio =5},
-            };
-
+            var listaProductos = DbProductos.Select(p => new InfoProductoVm { Nombre = p.Nombre, Precio = p.Precio }).ToArray();
             return View(listaProductos);
         }
 
@@ -31,13 +28,14 @@ namespace DemoMvc.Controllers
 
         //POST /Productos/Captura
         [HttpPost]
-        IActionResult Captura(CapturaProductoVm model)
+        [ValidateAntiForgeryToken]
+        public IActionResult Captura(CapturaProductoVm model)
         {
             if (ModelState.IsValid)
             {
                 //Crear un objeto del dominio a partir del modelo de la vista
                 //Persistir el objeto del dominio
-
+                DbProductos.Add(model);
                 return RedirectToAction("Index");
             }
             else
